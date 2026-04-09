@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guess The Number</title>
-  <link rel="stylesheet" href="guess.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="light">
   <div class="top-bar">
     <button onclick="toggleTheme()">🌗 Toggle Theme</button>
@@ -18,7 +20,7 @@
 
     <input type="number" id="guessInput" placeholder="Enter your guess" />
     <button onclick="checkGuess()">Submit</button>
-<button onclick="restartGame()" id="restartBtn" style="display: none;">🔁 Restart</button>
+    <button onclick="restartGame()" id="restartBtn" style="display: none;">Restart</button>
 
 
     <p id="message"></p>
@@ -29,6 +31,7 @@
     </div>
   </div>
 
-  <script src="guess.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>

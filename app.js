@@ -1,5 +1,10 @@
-// DOM Elements
-const numDisplay = document.getElementById("numDisplay"); // (Optional) To show the target number
+let num = Math.floor(Math.random() * 30 + 1);
+// console.log(num);
+let numberOfGuesses = 0;
+let score = 30;
+let time = 0;
+let timerInterval;
+
 const input = document.getElementById("guessInput");
 const message = document.getElementById("message");
 const scoreDisplay = document.getElementById("score");
@@ -7,35 +12,11 @@ const timerDisplay = document.getElementById("timer");
 const scoresList = document.getElementById("scoresList");
 const restartBtn = document.getElementById("restartBtn");
 
-// Game Variables
-let num;
-let numberOfGuesses;
-let score;
-let time;
-let timerInterval;
-
-// Initialize Game
-function initGame() {
-  num = Math.floor(Math.random() * 30 + 1); // Random number between 1–30
-  numberOfGuesses = 0;
-  score = 30;
-  time = 0;
-  input.disabled = false;
-  document.querySelector("button[onclick='checkGuess()']").disabled = false;
-  restartBtn.style.display = "none";
-  input.value = "";
-  message.textContent = "";
-  scoreDisplay.textContent = `Score: ${score}`;
-  timerDisplay.textContent = `Time: 0s`;
-  clearInterval(timerInterval); // Clear previous timer if any
-  startTimer(); // Start new timer
-}
-
-// Check User Guess
 function checkGuess() {
   const guess = parseInt(input.value);
+
   if (isNaN(guess) || guess < 1 || guess > 30) {
-    message.textContent = "❌ Enter a valid number between 1 and 30";
+    message.textContent = "Enter a valid number between 1 and 30";
     return;
   }
 
@@ -43,24 +24,41 @@ function checkGuess() {
   score--;
 
   if (guess === num) {
-    clearInterval(timerInterval); // Stop timer
+    clearInterval(timerInterval);
     message.textContent = `🎉 Correct! You guessed it in ${numberOfGuesses} attempts and ${time}s`;
-    scoreDisplay.textContent = `Final Score: ${score}`;
-    saveToLeaderboard(score, time); // Save score to leaderboard
+    scoreDisplay.textContent = `Final Score: ${score++}`;
+    saveToLeaderboard(score, time);
     input.disabled = true;
-    document.querySelector("button[onclick='checkGuess()']").disabled = true;
-    restartBtn.style.display = "inline-block"; // Show restart button
+    document.querySelector('button[onclick="checkGuess()"]').disabled = true;
+    restartBtn.style.display = "inline-block"
   } else if (guess > num) {
-    message.textContent = "📈 Too high!";
+    message.textContent = "Too high!";
   } else {
-    message.textContent = "📉 Too low!";
+    message.textContent = "Too low!";
   }
 
   scoreDisplay.textContent = `Score: ${score}`;
   input.value = "";
 }
 
-// Start Timer
+// initialize game
+function initGame() {
+  num = Math.floor(Math.random() * 30 + 1);
+  numberOfGuesses = 0;
+  time = 0;
+  score = 30;
+  input.disabled = false;
+  document.querySelector('button[onclick="checkGuess()"]').disabled = false
+  input.value = "";
+  restartBtn.style.display = "none";
+  message.textContent = "";
+  scoreDisplay.textContent = `Score: ${score}`;
+  timerDisplay.textContent = `Time 0s`;
+  clearInterval(timerInterval);
+  startTimer();
+}
+
+// timer logic
 function startTimer() {
   timerInterval = setInterval(() => {
     time++;
@@ -68,32 +66,35 @@ function startTimer() {
   }, 1000);
 }
 
-// Toggle Light/Dark Theme
+// theme toggle
 function toggleTheme() {
   document.body.classList.toggle("dark");
 }
 
-// Restart Game Handler
+// restart button logic
 function restartGame() {
   initGame();
 }
 
-// Save Score to Leaderboard
+// leaderboard logic
 function saveToLeaderboard(score, time) {
   const entry = {
     score,
     time,
-    date: new Date().toLocaleString(),
+    date: new Date().toLocaleString()
   };
+
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
   leaderboard.push(entry);
-  leaderboard.sort((a, b) => b.score - a.score); // Higher score first
-  leaderboard = leaderboard.slice(0, 5); // Top 5 scores only
+
+  // sort by score descending
+  leaderboard.sort((a, b) => b.score - a.score);
+  leaderboard = leaderboard.slice(0, 5); // top 5 scores
+
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   displayLeaderboard();
 }
 
-// Display Leaderboard Scores
 function displayLeaderboard() {
   const leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
   scoresList.innerHTML = "";
@@ -104,6 +105,7 @@ function displayLeaderboard() {
   });
 }
 
-// Start Game on Page Load
+// on page load
 displayLeaderboard();
-initGame();
+startTimer();
+initGame(); 
