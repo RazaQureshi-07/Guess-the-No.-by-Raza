@@ -10,7 +10,14 @@ const message = document.getElementById("message");
 const scoreDisplay = document.getElementById("score");
 const timerDisplay = document.getElementById("timer");
 const scoresList = document.getElementById("scoresList");
+const submitBtn = document.getElementById("submitBtn")
 const restartBtn = document.getElementById("restartBtn");
+
+input.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    checkGuess();
+  }
+});
 
 function checkGuess() {
   const guess = parseInt(input.value);
@@ -26,15 +33,26 @@ function checkGuess() {
   if (guess === num) {
     clearInterval(timerInterval);
     message.textContent = `🎉 Correct! You guessed it in ${numberOfGuesses} attempts and ${time}s`;
-    scoreDisplay.textContent = `Final Score: ${score++}`;
+    message.style.color = 'green';
+    message.style.fontWeight = "bold";
+    scoreDisplay.textContent = `Final Score: ${score}`;
     saveToLeaderboard(score, time);
     input.disabled = true;
-    document.querySelector('button[onclick="checkGuess()"]').disabled = true;
+    submitBtn.disabled = true;
     restartBtn.style.display = "inline-block"
+  }
+  else if (Math.abs(guess - num) <= 2) {
+    message.textContent = "🔥 Very close!";
+    message.style.color = "orange";
+
   } else if (guess > num) {
     message.textContent = "Too high!";
+    message.style.color = 'red';
+    message.style.fontWeight = "bold";
   } else {
     message.textContent = "Too low!";
+    message.style.color = 'red';
+    message.style.fontWeight = "bold";
   }
 
   scoreDisplay.textContent = `Score: ${score}`;
@@ -48,7 +66,7 @@ function initGame() {
   time = 0;
   score = 30;
   input.disabled = false;
-  document.querySelector('button[onclick="checkGuess()"]').disabled = false
+  submitBtn.disabled = false
   input.value = "";
   restartBtn.style.display = "none";
   message.textContent = "";
@@ -88,7 +106,12 @@ function saveToLeaderboard(score, time) {
   leaderboard.push(entry);
 
   // sort by score descending
-  leaderboard.sort((a, b) => b.score - a.score);
+  leaderboard.sort((a, b) => {
+  if (b.score === a.score) {
+    return a.time - b.time; // kam time wala winner
+  }
+  return b.score - a.score;
+});
   leaderboard = leaderboard.slice(0, 5); // top 5 scores
 
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
@@ -107,5 +130,4 @@ function displayLeaderboard() {
 
 // on page load
 displayLeaderboard();
-startTimer();
 initGame(); 

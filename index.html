@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guess The Number</title>
+  <link rel="shortcut icon" href="favicon/gg-brands-solid-full.svg" type="image/x-icon">
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -19,7 +20,7 @@
     <p>Guess a number between <strong>1 and 30</strong></p>
 
     <input type="number" id="guessInput" placeholder="Enter your guess" />
-    <button onclick="checkGuess()">Submit</button>
+    <button onclick="checkGuess()" id="submitBtn">Submit</button>
     <button onclick="restartGame()" id="restartBtn" style="display: none;">Restart</button>
 
 
